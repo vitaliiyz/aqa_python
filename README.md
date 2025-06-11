@@ -10,3 +10,11 @@ This is a test automation project written in Python 3.9. It is currently in the 
 ## 📝 Description
 
 The project is being created for practice and learning purposes. Structure and goals are still being defined.
+
+## ▶️ Running Tests
+
+Make sure Playwright and its dependencies are installed:
+
+- `$ pip install pytest playwright`
+- `$ playwright install`
+- `$ pytest` // run test
