@@ -1,5 +1,10 @@
+# === Test Tools ===
 pytest==8.4.0
+playwright==1.52.0
+
+# === HTTP Support ===
 requests==2.32.4
+
+# === Code Quality Tools ===
 flake8==7.2.0
 black==25.1.0
-playwright==1.52.0

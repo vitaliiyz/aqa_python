@@ -1,0 +1,32 @@
+[project]
+name = "playwright-tests"
+version = "0.1.0"
+description = "Automated Playwright tests"
+requires-python = ">=3.8"
+dependencies = [
+  "pytest==8.4.0",
+  "playwright==1.52.0",
+  "requests==2.32.4"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | build
+  | dist
+  | __pycache__
+)/
+'''
+
+[tool.flake8]
+max-line-length = 88
+exclude = ".git,__pycache__,venv,.venv,build,dist"
+
+[tool.isort]
+profile = "black"
+line_length = 88
