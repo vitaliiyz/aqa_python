@@ -25,7 +25,16 @@ exclude = '''
 
 [tool.flake8]
 max-line-length = 88
-exclude = ".git,__pycache__,venv,.venv,build,dist"
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | build
+  | dist
+  | __pycache__
+)/
+'''
 
 [tool.isort]
 profile = "black"
