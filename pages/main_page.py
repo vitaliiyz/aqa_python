@@ -7,20 +7,18 @@ accept_button_locator = (
     '//div[contains(@class, "buttonsDesktop")]/button[@data-ta="cookie-btn-accept-all"]'
 )
 user_menu_locator = '[class="empikNav__userLink userMenu"]'
-# register_link_text = "Załóż je"
 register_link_locator = '[title="Zarejestruj się"]'
 
 
 class MainPage(BasePage):
-    def __init__(self, page, expect):
-        super().__init__(page, expect)
+    def __init__(self, page):
+        super().__init__(page)
         self._url = "https://www.empik.com/"
 
     def popup(self):
-        print(popup_locator)
         return self.find_by_locator(popup_locator)
 
-    def popup_text(self):
+    def popup_text_element(self):
         return self.find_by_text(popup_text)
 
     def desktop_buttons(self):
@@ -33,5 +31,4 @@ class MainPage(BasePage):
         return self.find_by_locator(user_menu_locator)
 
     def register_link(self):
-        # return self.find_by_text(register_link_text)
         return self.find_by_locator(register_link_locator)
