@@ -1,5 +1,6 @@
 from playwright.sync_api import expect
 
+
 class BasePage:
     def __init__(self, page):
         self._url = None
