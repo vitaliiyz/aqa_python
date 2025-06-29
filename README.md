@@ -41,4 +41,7 @@ To run tests in headed mode (with browser UI):
 │   ├── __init__.py
 │   ├── test_main_page.py
 │   └── conftest.py
+├── utils/
+│   ├── __init__.py
+│   └── helpers.py
 ```
