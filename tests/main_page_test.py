@@ -1,6 +1,7 @@
 import pytest
 from utils.helpers import close_popup_if_visible
 
+
 def test_accept_privacy_popup_visible(main_page):
     main_page.expect_to_be_visible(main_page.popup())
 
@@ -15,7 +16,7 @@ def test_accept_button_visible(main_page):
 
 def test_accept_privacy_popup_closed(main_page):
     close_popup_if_visible(main_page)
-    main_page.expect_not_to_be_visible(main_page.popup_text())
+    main_page.expect_not_to_be_visible(main_page.popup_text_element())
     main_page.expect_not_to_be_visible(main_page.desktop_buttons())
     main_page.expect_not_to_be_visible(main_page.accept_button())
 
