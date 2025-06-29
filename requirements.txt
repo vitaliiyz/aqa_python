@@ -1,6 +1,7 @@
 # === Test Tools ===
 pytest==8.4.0
 playwright==1.52.0
+pytest-playwright==0.7.0
 
 # === HTTP Support ===
 requests==2.32.4
