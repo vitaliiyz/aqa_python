@@ -2,6 +2,8 @@
 
 This is a test automation project written in Python 3.9. It is currently in the early stages of development.
 
+[![GitHub Actions](https://github.com/vitaliiyz/aqa_python/actions/workflows/github-actions.yml/badge.svg?branch=main)](https://github.com/vitaliiyz/aqa_python/actions/workflows/github-actions.yml)
+
 ## 🛠 Technologies
 
 - Python 3.9  
