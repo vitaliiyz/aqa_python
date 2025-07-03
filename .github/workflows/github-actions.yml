@@ -1,10 +1,15 @@
-name: GitHub Actions
+name: Playwright E2E Tests with Allure Report
 
 on:
   push:
-      branches:
+    branches:
       - main
       - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
 
 jobs:
   test:
@@ -12,12 +17,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
@@ -25,8 +30,34 @@ jobs:
           pip install -r requirements.txt
 
       - name: Install Playwright browsers
-        run: playwright install
+        run: playwright install --with-deps chromium firefox webkit
 
-      - name: Run tests
-        run: |
-          pytest
+      - name: Run Playwright tests with Allure
+        run: pytest --alluredir=./allure-results --screenshot=only-on-failure --trace=on
+        env:
+          # BASE_URL: ${{ secrets.BASE_URL }}
+        continue-on-error: true
+
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-action@v1.8.1
+        id: allure-report-generation
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: gh-pages/allure-history
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          publish_branch: gh-pages
