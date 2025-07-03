@@ -13,6 +13,7 @@ on:
 
 jobs:
   test:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
 
     steps:
@@ -34,9 +35,8 @@ jobs:
 
       - name: Run Playwright tests with Allure
         run: pytest --alluredir=./allure-results --screenshot=only-on-failure --trace=on
-        env:
-          # BASE_URL: ${{ secrets.BASE_URL }}
         continue-on-error: true
+
 
       - name: Get Allure history
         uses: actions/checkout@v4
