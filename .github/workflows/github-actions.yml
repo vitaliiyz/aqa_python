@@ -11,6 +11,10 @@ on:
       - dev
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+
 jobs:
   test:
     timeout-minutes: 60
@@ -20,7 +24,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -34,9 +38,39 @@ jobs:
         run: playwright install --with-deps chromium firefox webkit
 
       - name: Run Playwright tests with Allure
-        run: pytest --alluredir=./allure-results --screenshot=only-on-failure --trace=on
+        run: .venv/bin/python -m pytest --alluredir=./allure-results --screenshot=only-on-failure --trace=on
         continue-on-error: true
 
+      - name: Store Playwright Traces and Videos From Failed Tests
+        if: failure()
+        uses: actions/upload-artifact@v4.6.2
+        id: artifact-upload-step
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 7
+
+      - name: Link Playwright Traces And Videos To Allure Report
+        working-directory: allure-results
+        if: failure()
+        run: echo ARTIFACT_URL=${{ steps.artifact-upload-step.outputs.artifact-url }} >> environment.properties
+
+      - name: Link Git Information And Browser Version To Allure Report
+        working-directory: allure-results
+        if: always()
+        run: |
+          {
+            echo BUILD_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            echo GIT_BRANCH=${{ github.head_ref || github.ref_name }}
+            echo GIT_COMMIT_ID=${{ github.sha }}
+            echo GIT_COMMIT_MESSAGE=$(git show -s --format=%s HEAD)
+            echo GIT_COMMIT_AUTHOR_NAME=$(git show -s --format='%ae' HEAD)
+            echo GIT_COMMIT_TIME=$(git show -s --format=%ci HEAD)
+            # This line might fail if Google Chrome isn't the default or installed directly.
+            # You might need to change it to find the Chromium version installed by Playwright.
+            # Example for Playwright Chromium version:
+            echo CHROMIUM_VERSION=$(~/.cache/ms-playwright/chromium-*/chrome-linux/chrome --version | grep -oP 'Chromium/\K[0-9.]+')
+          } >> environment.properties
 
       - name: Get Allure history
         uses: actions/checkout@v4
@@ -47,17 +81,5 @@ jobs:
           path: gh-pages
 
       - name: Generate Allure Report
-        uses: simple-elf/allure-action@v1.8.1
+        uses: simple-elf/allure-report-action@v1.12
         id: allure-report-generation
-        if: always()
-        with:
-          allure_results: allure-results
-          allure_history: gh-pages/allure-history
-
-      - name: Deploy Allure Report to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
-          publish_branch: gh-pages
