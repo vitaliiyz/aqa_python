@@ -9,3 +9,8 @@ requests==2.32.4
 # === Code Quality Tools ===
 flake8==7.2.0
 black==25.1.0
+
+# === Allure Tools ===
+allure-pytest==2.14.3
+allure-python-commons==2.14.3
+attrs==25.3.0
