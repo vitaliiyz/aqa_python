@@ -1,2 +1,4 @@
 .idea
 venv
+allure-report
+allure-results
