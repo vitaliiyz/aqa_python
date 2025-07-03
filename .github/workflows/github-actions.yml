@@ -51,7 +51,7 @@ jobs:
 
       - name: Run Playwright tests with Allure
         run: |
-          pytest --alluredir=allure-results --screenshot=only-on-failure --trace=on || true
+          pytest --alluredir=allure-results --screenshot=only-on-failure || true
         continue-on-error: true
 
       - name: Store Playwright Traces and Videos From Failed Tests
