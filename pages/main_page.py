@@ -1,10 +1,14 @@
 from pages.base_page import BasePage
+from config import BASE_URL
 
 
 class MainPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
-        self._url = "https://www.empik.com/"
+        self._url = BASE_URL
+
+    def go_to(self):
+        self._page.goto(self._url)
 
     def popup(self):
         return self.find_by_locator('[class*="CookiesConsentsBannerRodoHelper"]')
