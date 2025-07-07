@@ -8,7 +8,8 @@ from utils.helpers import close_popup_if_visible
 
 PRODUCTS_NAMES = [
     "iphone 16 pro",
-    # "playstation 5"
+    "playstation 5",
+    "harry potter"
 ]
 
 
@@ -76,5 +77,17 @@ def test_add_and_remove_product_from_cart(main_page, search_page, product_page, 
     cart_page.expect_to_have_text(cart_page.product_name(), product_name_text)
     cart_page.expect_to_have_text(cart_page.product_price(), product_price_text)
 
-    # Check if Quantity Box and Quantity Box value are visible
+    # Check if Quantity Box, Quantity Remove Button and Quantity Box value are visible
     cart_page.expect_to_be_visible(cart_page.quantity_box())
+    cart_page.expect_to_have_attribute(cart_page.quantity_box_value(), "value", "1")
+    cart_page.expect_to_be_visible(cart_page.quantity_box_remove_button())
+
+    # Click Quantity Remove Button
+    cart_page.click(cart_page.quantity_box_remove_button())
+
+    # Check if Quantity Box is not visible
+    cart_page.expect_not_to_be_visible(cart_page.quantity_box())
+
+    # Check if Empty Cart Section is visible and Title equals to Twój koszyk jest pusty
+    cart_page.expect_to_be_visible(cart_page.empty_cart_section())
+    cart_page.expect_to_have_text(cart_page.empty_cart_section_title(), 'Twój koszyk jest pusty')

@@ -23,4 +23,13 @@ class CartPage(BasePage):
         return self.find_by_page_locator('[data-ta="quantity-box"]')
 
     def quantity_box_value(self):
-        return self.find_by_locator(self.quantity_box(), 'input').get_attribute('value')
+        return self.find_by_locator(self.quantity_box(), 'input')
+
+    def quantity_box_remove_button(self):
+        return self.find_by_locator(self.quantity_box(), '[data-ta="quantity-remove"]')
+
+    def empty_cart_section(self):
+        return self.find_by_page_locator('[class="css-ndkvgn-emptyCart"]')
+
+    def empty_cart_section_title(self):
+        return self.find_by_locator(self.empty_cart_section(), '[class="css-z8hido-emptyCartTitle"]')

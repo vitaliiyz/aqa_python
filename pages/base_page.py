@@ -35,6 +35,9 @@ class BasePage:
     def expect_to_have_text(self, element, text_value):
         self._expect(element).to_have_text(text_value)
 
+    def expect_to_have_attribute(self, element, attr_name, attr_value):
+        self._expect(element).to_have_attribute(attr_name, attr_value)
+
     def expect_to_contain_text_ignore_case(self, element, expected_text):
         self._expect(element).to_contain_text(expected_text, ignore_case=True)
 
