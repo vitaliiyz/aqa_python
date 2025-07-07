@@ -6,8 +6,15 @@ This is a test automation project written in Python 3.9. It is currently in the 
 
 ## 🛠 Technologies
 
-- Python 3.9  
+- Python 3.11  
 - Playwright
+
+## 📊 Allure Report
+
+Allure HTML reports are automatically generated and published via GitHub Pages after each successful test run on `main` or `dev` branches.
+
+🔗 **View latest report:** [Allure Report on GitHub Pages](https://vitaliiyz.github.io/aqa_python/)  
+*(Report may not exist until the first successful CI run on `main` or `dev`.)*
 
 ## 📝 Description
 
