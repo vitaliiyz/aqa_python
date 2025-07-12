@@ -21,7 +21,7 @@ class MainPage(BasePage):
         )
 
     def user_menu(self):
-        return self.find_by_page_locator('[class="empikNav__userLink userMenu"]')
+        return self.find_by_page_locator('.empikNav__userLink.userMenu')
 
     def register_link(self):
         return self.find_by_page_locator('[title="Zarejestruj się"]')
@@ -30,7 +30,7 @@ class MainPage(BasePage):
         return self.find_by_page_locator('[type="search"]')
 
     def search_dropdown_related_products_list(self):
-        return self.find_by_page_locator('[class="css-26b661"]')
+        return self.find_by_page_locator('.css-26b661')
 
     def search_dropdown_related_products_list_1st_value(self):
         return self.find_by_locator(self.search_dropdown_related_products_list(), "i").first

@@ -1,10 +1,7 @@
-import time
-
 import allure
 import pytest
 
 from tests.conftest import search_page
-from utils.helpers import close_popup_if_visible
 
 PRODUCTS_NAMES = [
     "iphone 16 pro",
