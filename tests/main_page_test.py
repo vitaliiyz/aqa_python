@@ -1,5 +1,4 @@
 import allure
-import pytest
 
 
 @allure.step("Verify cookie popup is hidden")
