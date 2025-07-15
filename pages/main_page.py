@@ -11,21 +11,33 @@ class MainPage(BasePage):
         self._page.goto(self._url)
 
     def popup(self):
-        return self.find_by_locator('[class*="CookiesConsentsBannerRodoHelper"]')
+        return self.find_by_page_locator('[class*="CookiesConsentsBannerRodoHelper"]')
 
     def popup_text_element(self):
         return self.find_by_text("Prywatność Użytkownika")
 
     def desktop_buttons(self):
-        return self.find_by_locator('[class*="buttonsDesktop"]')
+        return self.find_by_page_locator('[class*="buttonsDesktop"]')
 
     def accept_button(self):
-        return self.find_by_locator(
+        return self.find_by_page_locator(
             '//div[contains(@class, "buttonsDesktop")]/button[@data-ta="cookie-btn-accept-all"]'
         )
 
     def user_menu(self):
-        return self.find_by_locator('[class="empikNav__userLink userMenu"]')
+        return self.find_by_page_locator('.empikNav__userLink.userMenu')
 
     def register_link(self):
-        return self.find_by_locator('[title="Zarejestruj się"]')
+        return self.find_by_page_locator('[title="Zarejestruj się"]')
+
+    def search_input(self):
+        return self.find_by_page_locator('[type="search"]')
+
+    def search_dropdown_related_products_list(self):
+        return self.find_by_page_locator('.css-26b661')
+
+    def search_dropdown_related_products_list_1st_value(self):
+        return self.find_by_locator(self.search_dropdown_related_products_list(), "i").first
+
+    def search_button(self):
+        return self.find_by_page_locator('//div[@class="main-search__container"]//button[@type="submit"]')
