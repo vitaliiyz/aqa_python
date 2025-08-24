@@ -1,4 +1,4 @@
-name: Playwright E2E Tests with Allure Report
+name: CI/CD Pipeline
 
 on:
   push:
@@ -16,7 +16,62 @@ permissions:
   pages: write
 
 jobs:
-  test:
+  # Job 1: Code Quality and Multi-platform testing
+  quality-check:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.9', '3.10', '3.11']
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            venv-${{ runner.os }}-${{ matrix.python-version }}-
+
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-ansi
+
+      - name: Verify Poetry setup
+        run: |
+          poetry --version
+          poetry check
+          poetry show
+
+      - name: Run code quality checks
+        run: |
+          poetry run black --check .
+          poetry run flake8 .
+
+      - name: Run basic tests (collect only)
+        run: poetry run pytest --collect-only
+
+  # Job 2: Full E2E Tests with Allure Report (Ubuntu only)
+  e2e-tests:
+    needs: quality-check
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
@@ -24,26 +79,62 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-        with:
-          version: "0.4.27"
-          enable-cache: true
-          cache-dependency-glob: "requirements**.txt"
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12.7'
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
+          poetry config installer.parallel true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-3.11-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            venv-${{ runner.os }}-3.11-
 
       - name: Install dependencies
-        run: |
-          uv pip install --system -r requirements.txt
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-ansi
 
-      - name: Ensure Playwright and browsers are installed
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: poetry run playwright install --with-deps
+
+      - name: Install Playwright dependencies (if cached)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: poetry run playwright install-deps
+
+      - name: Show Poetry info (for debugging)
         run: |
-          uv pip install --system playwright
-          python -m playwright install --with-deps
+          poetry --version
+          poetry check
+          poetry show --tree
+          poetry env info
+
+      - name: Verify test collection
+        run: poetry run pytest --collect-only
 
       - name: Set environment variables
         run: |
@@ -51,7 +142,7 @@ jobs:
 
       - name: Run Playwright tests with Allure
         run: |
-          pytest --alluredir=allure-results --screenshot=only-on-failure || true
+          poetry run pytest --alluredir=allure-results --screenshot=only-on-failure || true
         continue-on-error: true
 
       - name: Store Playwright Traces and Videos From Failed Tests
