@@ -1,4 +1,4 @@
-   - name: Playwright test with Allure HTML Report
+name: Playwright test with Allure HTML Report
 
 on:
   push:
@@ -31,18 +31,18 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-
       - name: Install dependencies
         run: |
-          poetry install
-          poetry run playwright install --with-deps
+          python -m venv venv
+          . venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install --with-deps
 
       - name: Run tests with Allure
         run: |
-          xvfb-run poetry run pytest --alluredir=allure-results
+          . venv/bin/activate
+          xvfb-run pytest --alluredir=allure-results
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.12
