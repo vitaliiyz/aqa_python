@@ -1,82 +1,29 @@
-name: CI/CD Pipeline
+   - name: Playwright test with Allure HTML Report
 
 on:
   push:
-    branches:
-      - main
-      - dev
+    branches: [main, dev]
   pull_request:
-    branches:
-      - main
-      - dev
+    branches: [main, dev]
   workflow_dispatch:
 
 permissions:
   contents: write
   pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
 
 jobs:
-  # Job 1: Code Quality and Multi-platform testing
-  quality-check:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.9', '3.10', '3.11']
-      fail-fast: false
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: latest
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            venv-${{ runner.os }}-${{ matrix.python-version }}-
-
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-ansi
-
-      - name: Verify Poetry setup
-        run: |
-          poetry --version
-          poetry check
-          poetry show
-
-      - name: Run code quality checks
-        run: |
-          poetry run black --check .
-          poetry run flake8 .
-
-      - name: Run basic tests (collect only)
-        run: poetry run pytest --collect-only
-
-  # Job 2: Full E2E Tests with Allure Report (Ubuntu only)
-  e2e-tests:
-    needs: quality-check
-    timeout-minutes: 60
+  run-tests:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.52.0-noble
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -85,98 +32,42 @@ jobs:
           python-version: '3.11'
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: latest
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-
-      - name: Configure Poetry
         run: |
-          poetry config virtualenvs.create true
-          poetry config virtualenvs.in-project true
-          poetry config installer.parallel true
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-3.11-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            venv-${{ runner.os }}-3.11-
+          curl -sSL https://install.python-poetry.org | python3 -
 
       - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-ansi
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
-
-      - name: Install Playwright browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: poetry run playwright install --with-deps
-
-      - name: Install Playwright dependencies (if cached)
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: poetry run playwright install-deps
-
-      - name: Show Poetry info (for debugging)
         run: |
-          poetry --version
-          poetry check
-          poetry show --tree
-          poetry env info
+          poetry install
+          poetry run playwright install --with-deps
 
-      - name: Verify test collection
-        run: poetry run pytest --collect-only
-
-      - name: Set environment variables
+      - name: Run tests with Allure
         run: |
-          echo "API_TOKEN=${{ secrets.API_TOKEN }}" >> $GITHUB_ENV
-
-      - name: Run Playwright tests with Allure
-        run: |
-          poetry run pytest --alluredir=allure-results --screenshot=only-on-failure || true
-        continue-on-error: true
-
-      - name: Store Playwright Traces and Videos From Failed Tests
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: test-results/
-          retention-days: 7
-
-      - name: Link Playwright Traces And Videos To Allure Report
-        working-directory: allure-results
-        if: failure()
-        run: echo ARTIFACT_URL=${{ steps.artifact-upload-step.outputs.artifact-url }} >> environment.properties
-
-      - name: Get Allure history
-        uses: actions/checkout@v4
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
+          xvfb-run poetry run pytest --alluredir=allure-results
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.12
-        id: allure-report-generation
+        id: allure-report
         with:
           allure_results: allure-results
-          allure_history: gh-pages/allure-history
-          keep_reports: 20
+          allure_report: allure-report
+          gh_pages: gh-pages
+          allure_history: allure-history
 
-      - name: Deploy report to Github Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: gh-pages/allure-history
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+  deploy:
+    needs: run-tests
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

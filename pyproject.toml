@@ -1,17 +1,18 @@
 [tool.poetry]
-name = "aqa-python"
+name = "playwright-tests"
 version = "0.1.0"
-description = "Automated Playwright tests for practice and learning"
+description = "Automated Playwright tests"
+authors = []
 readme = "README.md"
-packages = [{include = "pages"}, {include = "tests"}, {include = "utils"}]
+packages = []
 
 [tool.poetry.dependencies]
-python = "^3.9"
-pytest = "8.4.0"
+python = ">=3.9"
+pytest = "7.4.0"
 playwright = "1.52.0"
 pytest-playwright = "0.7.0"
 requests = "2.32.4"
-allure-pytest = "^2.13.5"
+allure-pytest = "2.13.2"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "7.2.0"
@@ -23,7 +24,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 88
-target-version = ['py39']
+target-version = ['py38']
 exclude = '''
 /(
     \.git
