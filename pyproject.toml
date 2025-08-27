@@ -1,13 +1,26 @@
-[project]
+[tool.poetry]
 name = "playwright-tests"
 version = "0.1.0"
 description = "Automated Playwright tests"
-requires-python = ">=3.8"
-dependencies = [
-  "pytest==8.4.0",
-  "playwright==1.52.0",
-  "requests==2.32.4"
-]
+authors = []
+readme = "README.md"
+packages = []
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+pytest = "7.4.0"
+playwright = "1.52.0"
+pytest-playwright = "0.7.0"
+requests = "2.32.4"
+allure-pytest = "2.13.2"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "7.2.0"
+black = "25.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 88
