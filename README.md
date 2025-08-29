@@ -6,7 +6,8 @@ This is a test automation project written in Python 3.9. It is currently in the 
 
 ## 🛠 Technologies
 
-- Python 3.11  
+- Python 3.9+  
+- Poetry (dependency management)
 - Playwright
 
 ## 📊 Allure Report
@@ -21,24 +22,55 @@ Allure HTML reports are automatically generated and published via GitHub Pages a
 The project is being created for practice and learning purposes. Structure and goals are still being defined.
 
 ## ▶️ Running Tests
+
 #### Prerequisites
 
-- `$ pip install pytest playwright`
-- `$ playwright install`
+This project uses Poetry for dependency management. Make sure you have Poetry installed:
+
+```bash
+# Install Poetry (if not already installed)
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Or using pipx (recommended)
+pipx install poetry
+```
+
+Then install dependencies:
+
+```bash
+# Install all dependencies including dev tools
+poetry install --extras dev
+
+# Install Playwright browsers
+poetry run playwright install
+```
 
 #### All possible ways to run tests:
 
 By default, tests run in Headless mode:
-- `$ pytest                               # Run all tests`
-- `$ pytest tests/main_page_test.py       # Run all tests in specific file`
-- `$ pytest tests/main_page_test.py::test_accept_privacy_popup_visible # Run specific test`
+- `poetry run pytest                               # Run all tests`
+- `poetry run pytest tests/main_page_test.py       # Run all tests in specific file`
+- `poetry run pytest tests/main_page_test.py::test_accept_privacy_popup_visible # Run specific test`
 
 To run tests in headed mode (with browser UI):
-- `$ pytest --headed                      # Show browser UI`
-- `$ pytest --slowmo                      # Slow down actions by 500ms`
-- `$ pytest --browser chromium            # Use Chromium browser (default)`
-- `$ pytest --headed --browser firefox    # Use Firefox browser`
-- `$ pytest tests/main_page_test.py::test_accept_privacy_popup_visible --headed --browser firefox`
+- `poetry run pytest --headed                      # Show browser UI`
+- `poetry run pytest --slowmo                      # Slow down actions by 500ms`
+- `poetry run pytest --browser chromium            # Use Chromium browser (default)`
+- `poetry run pytest --headed --browser firefox    # Use Firefox browser`
+- `poetry run pytest tests/main_page_test.py::test_accept_privacy_popup_visible --headed --browser firefox`
+
+#### Development tools:
+
+```bash
+# Run code formatting
+poetry run black .
+
+# Run linting
+poetry run flake8 .
+
+# Activate the virtual environment (optional, for manual use)
+poetry shell
+```
 
 ## 📁 Project Structure
 ```
