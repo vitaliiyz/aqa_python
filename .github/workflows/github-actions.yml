@@ -31,18 +31,21 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
       - name: Install dependencies
         run: |
-          python -m venv venv
-          . venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          playwright install --with-deps
+          poetry install --extras dev
+          poetry run playwright install --with-deps
 
       - name: Run tests with Allure
         run: |
-          . venv/bin/activate
-          xvfb-run pytest --alluredir=allure-results
+          poetry run pytest --alluredir=allure-results
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.12
