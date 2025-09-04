@@ -61,13 +61,16 @@ jobs:
   deploy:
     needs: run-tests
     runs-on: ubuntu-latest
-    name: Deploy to GitHub Pages
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
