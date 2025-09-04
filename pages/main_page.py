@@ -1,5 +1,5 @@
-from pages.base_page import BasePage
 from config import BASE_URL
+from pages.base_page import BasePage
 
 
 class MainPage(BasePage):
@@ -11,7 +11,7 @@ class MainPage(BasePage):
         self._page.goto(self._url)
 
     def popup(self):
-        return self.find_by_page_locator('[class*="CookiesConsentsBannerRodoHelper"]')
+        return self.find_by_page_locator('[class*="CookiesConsentsBannerRodo-module_wrapper"]')
 
     def popup_text_element(self):
         return self.find_by_text("Prywatność Użytkownika")
@@ -21,7 +21,7 @@ class MainPage(BasePage):
 
     def accept_button(self):
         return self.find_by_page_locator(
-            '//div[contains(@class, "buttonsDesktop")]/button[@data-ta="cookie-btn-accept-all"]'
+            '[class*="InfoPage-module_buttonsDesktop"] [data-ta="cookie-btn-accept-all"]'
         )
 
     def user_menu(self):

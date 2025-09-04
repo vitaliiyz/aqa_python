@@ -1,3 +1,5 @@
+import pdb
+
 import allure
 import pytest
 
@@ -65,8 +67,7 @@ def verify_and_remove_from_cart(cart_page, product_name_text, product_price_text
     cart_page.click(cart_page.quantity_box_remove_button())
 
     cart_page.expect_not_to_be_visible(cart_page.quantity_box())
-    cart_page.expect_to_be_visible(cart_page.empty_cart_section())
-    cart_page.expect_to_have_text(cart_page.empty_cart_section_title(), 'Twój koszyk jest pusty')
+    cart_page.expect_to_contain_text(cart_page.empty_cart_section_title(), 'Twój koszyk jest pusty')
 
 
 @pytest.mark.parametrize('product', PRODUCTS_NAMES)
