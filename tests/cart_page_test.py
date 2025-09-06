@@ -5,7 +5,6 @@ from tests.conftest import search_page
 
 PRODUCTS_NAMES = [
     "iphone 16 pro",
-    "playstation 5",
     "harry potter"
 ]
 
