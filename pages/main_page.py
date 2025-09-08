@@ -21,7 +21,7 @@ class MainPage(BasePage):
 
     def accept_button(self):
         return self.find_by_page_locator(
-            '//div[contains(@class, "buttonsDesktop")]/button[@data-ta="cookie-btn-accept-all"]'
+            '[class*="InfoPage-module_buttonsDesktop"] [data-ta="cookie-btn-accept-all"]'
         )
 
     def user_menu(self):

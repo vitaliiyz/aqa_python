@@ -28,8 +28,5 @@ class CartPage(BasePage):
     def quantity_box_remove_button(self):
         return self.find_by_locator(self.quantity_box(), '[data-ta="quantity-remove"]')
 
-    def empty_cart_section(self):
-        return self.find_by_page_locator('//section')
-
     def empty_cart_section_title(self):
-        return self.find_by_locator(self.empty_cart_section(), 'xpath=./div/div/div/p')
+        return self.find_by_page_locator('section[class*="CartApp"]')
