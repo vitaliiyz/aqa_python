@@ -11,7 +11,7 @@ class MainPage(BasePage):
         self._page.goto(self._url)
 
     def popup(self):
-        return self.find_by_page_locator('[class*="CookiesConsentsBannerRodo"][class*="container"]')
+        return self.find_by_page_locator('[data-box-key="CookiesConsentsBannerRodoBox"] [class*="CookiesConsentsBannerRodo-module_container"]')
 
     def popup_text_element(self):
         return self.find_by_text("Prywatność Użytkownika")
