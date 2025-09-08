@@ -21,9 +21,6 @@ dev = [
     "black==25.1.0"
 ]
 
-[tool.poetry]
-packages = [{include = "pages"}, {include = "tests"}, {include = "utils"}]
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
