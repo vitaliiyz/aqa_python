@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Automated QA tests with Playwright"
 requires-python = ">=3.9"
 dependencies = [
-    "pytest==7.4.0",
+    "pytest==8.4.0",
     "playwright==1.52.0",
     "pytest-playwright==0.7.0",
     "requests==2.32.4",
