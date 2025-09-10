@@ -14,19 +14,25 @@ class CartPage(BasePage):
         return self.find_by_page_locator('[data-ta="product-box"]')
 
     def product_name(self):
-        return self.find_by_locator(self.product_box(), '[data-ta="product-title"]')
+        return self.find_by_locator(
+            self.product_box(), '[data-ta="product-title"]'
+        )
 
     def product_price(self):
-        return self.find_by_locator(self.product_box(), '[data-ta="product-main-price"]')
+        return self.find_by_locator(
+            self.product_box(), '[data-ta="product-main-price"]'
+        )
 
     def quantity_box(self):
         return self.find_by_page_locator('[data-ta="quantity-box"]')
 
     def quantity_box_value(self):
-        return self.find_by_locator(self.quantity_box(), 'input')
+        return self.find_by_locator(self.quantity_box(), "input")
 
     def quantity_box_remove_button(self):
-        return self.find_by_locator(self.quantity_box(), '[data-ta="quantity-remove"]')
+        return self.find_by_locator(
+            self.quantity_box(), '[data-ta="quantity-remove"]'
+        )
 
     def empty_cart_section_title(self):
-        return self.find_by_page_locator('section[class*="CartApp"]')
+        return self.find_by_page_locator('[data-ta="empty-cart-section"]')
