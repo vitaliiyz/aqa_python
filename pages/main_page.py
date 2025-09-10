@@ -28,7 +28,7 @@ class MainPage(BasePage):
         )
 
     def user_menu(self):
-        return self.find_by_page_locator('.empikNav__userLink.userMenu')
+        return self.find_by_page_locator(".empikNav__userLink.userMenu")
 
     def register_link(self):
         return self.find_by_page_locator('[title="Zarejestruj się"]')
