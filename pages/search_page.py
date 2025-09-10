@@ -2,21 +2,30 @@ from pages.base_page import BasePage
 
 
 class SearchPage(BasePage):
+    """Search results page object for handling product search functionality."""
+
     def __init__(self, page):
+        """Initialize the search page."""
         super().__init__(page)
 
     def search_list(self):
         return self.find_by_page_locator(
-            '//div[contains(@class, "search-list search-with-info")][@data-box-type="product"]')
+            '//div[contains(@class, "search-list search-with-info")]'
+            '[@data-box-type="product"]'
+        )
 
     def search_list_1st_item(self):
-        return self.find_by_locator(self.search_list(), 'xpath=//div[@itemprop="item"]').first
+        return self.find_by_locator(
+            self.search_list(), 'xpath=//div[@itemprop="item"]'
+        ).first
 
     def search_list_1st_item_link(self):
         return self.find_by_locator(self.search_list_1st_item(), '[class="seoTitle"]')
 
     def search_list_1st_item_name(self):
-        return self.find_by_locator(self.search_list_1st_item_link(), 'strong')
+        return self.find_by_locator(self.search_list_1st_item_link(), "strong")
 
     def search_list_1st_item_price(self):
-        return self.find_by_locator(self.search_list_1st_item(), 'xpath=//div[@itemprop="price"]')
+        return self.find_by_locator(
+            self.search_list_1st_item(), 'xpath=//div[@itemprop="price"]'
+        )

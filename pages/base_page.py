@@ -2,7 +2,10 @@ from playwright.sync_api import expect
 
 
 class BasePage:
+    """Base page class providing common functionality for all page objects."""
+
     def __init__(self, page):
+        """Initialize the base page with a Playwright page instance."""
         self._url = None
         self._page = page
         self._expect = expect
