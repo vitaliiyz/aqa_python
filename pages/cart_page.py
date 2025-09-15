@@ -2,7 +2,10 @@ from pages.base_page import BasePage
 
 
 class CartPage(BasePage):
+    """Shopping cart page object for handling cart operations."""
+
     def __init__(self, page):
+        """Initialize the cart page."""
         super().__init__(page)
         self._page_title = "Koszyk"
 
@@ -17,13 +20,15 @@ class CartPage(BasePage):
         return self.find_by_locator(self.product_box(), '[data-ta="product-title"]')
 
     def product_price(self):
-        return self.find_by_locator(self.product_box(), '[data-ta="product-main-price"]')
+        return self.find_by_locator(
+            self.product_box(), '[data-ta="product-main-price"]'
+        )
 
     def quantity_box(self):
         return self.find_by_page_locator('[data-ta="quantity-box"]')
 
     def quantity_box_value(self):
-        return self.find_by_locator(self.quantity_box(), 'input')
+        return self.find_by_locator(self.quantity_box(), "input")
 
     def quantity_box_remove_button(self):
         return self.find_by_locator(self.quantity_box(), '[data-ta="quantity-remove"]')
