@@ -17,7 +17,7 @@ A Python test automation project built with Playwright for learning web testing 
 
 1. **Clone the project:**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/vitaliiyz/aqa_python.git
    cd aqa_python
    ```
 
