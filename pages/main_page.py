@@ -27,17 +27,20 @@ class MainPage(BasePage):
             '[data-ta="cookie-btn-accept-all"]'
         )
 
-    def user_menu(self):
-        return self.find_by_page_locator(".empikNav__userLink.userMenu")
+    # def user_menu(self):
+    #     return self.find_by_page_locator(".empikNav__userLink.userMenu")
+
+    def login_button(self):
+        return self.find_by_page_locator('xpath=//header//a[contains(@title, "Zaloguj")]')
 
     def register_link(self):
         return self.find_by_page_locator('[title="Zarejestruj się"]')
 
     def search_input(self):
-        return self.find_by_page_locator('[type="search"]')
+        return self.find_by_page_locator('xpath=//header//input[@type="search"]')
 
     def search_dropdown_related_products_list(self):
-        return self.find_by_page_locator(".css-26b661")
+        return self.find_by_page_locator('[class*="phrasesList"]')
 
     def search_dropdown_related_products_list_1st_value(self):
         return self.find_by_locator(
@@ -46,5 +49,5 @@ class MainPage(BasePage):
 
     def search_button(self):
         return self.find_by_page_locator(
-            '//div[@class="main-search__container"]//button[@type="submit"]'
+            '//header//div[contains(@class, "searchContainer")]//button[@type="submit"]'
         )

@@ -1,5 +1,7 @@
 import pytest
 from playwright.sync_api import Page
+
+from pages.login_page import LoginPage
 from pages.main_page import MainPage
 from pages.search_page import SearchPage
 from pages.product_page import ProductPage
@@ -38,4 +40,11 @@ def product_page(page: Page) -> ProductPage:
 def cart_page(page: Page) -> CartPage:
     """Fixture to initialize the CartPage and ensure it's open."""
     page_model = CartPage(page)
+    return page_model
+
+
+@pytest.fixture
+def login_page(page: Page) -> LoginPage:
+    """Fixture to initialize the LoginPage and ensure it's open."""
+    page_model = LoginPage(page)
     return page_model

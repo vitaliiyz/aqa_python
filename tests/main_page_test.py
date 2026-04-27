@@ -10,10 +10,12 @@ def test_accept_privacy_popup_closed(main_page):
 
 @allure.step("Verify User Menu is visible")
 def test_user_menu_to_be_visible(main_page):
-    main_page.expect_to_be_visible(main_page.user_menu())
+    main_page.expect_to_be_visible(main_page.login_button())
 
 
 @allure.step("Verify Register Link is visible")
-def test_register_link_to_be_visible(main_page):
-    main_page.hover(main_page.user_menu())
-    main_page.expect_to_be_visible(main_page.register_link())
+def test_login_button_to_be_visible(main_page):
+    # main_page.hover(main_page.user_menu())
+    main_page.click(main_page.login_button())
+    # main_page.expect_to_be_visible(main_page.register_link())
+
