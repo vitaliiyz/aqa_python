@@ -2,9 +2,9 @@ name: 🎭 Playwright Tests
 
 on:
   push:
-    branches: [main, dev]
+    branches: [ main, dev ]
   pull_request:
-    branches: ['*']
+    branches: [ '*' ]
   workflow_dispatch:
 
 permissions:
@@ -48,15 +48,23 @@ jobs:
           poetry run pytest --alluredir=allure-results
         continue-on-error: true
 
-      - name: Generate Allure Report
-        uses: simple-elf/allure-report-action@v1.12
+      - name: Install Allure CLI
         if: always()
-        id: allure-report
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          gh_pages: gh-pages
-          allure_history: allure-history
+        run: |
+          wget https://github.com/allure-framework/allure2/releases/download/2.32.0/allure-2.32.0.tgz
+          tar -zxf allure-2.32.0.tgz
+          mv allure-2.32.0 /opt/allure
+          ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          if [ -d allure-results ]; then
+            allure generate allure-results --clean -o allure-report
+          else
+            mkdir -p allure-report
+            echo "No allure results found" > allure-report/index.html
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
