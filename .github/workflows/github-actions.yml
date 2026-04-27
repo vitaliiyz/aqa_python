@@ -48,6 +48,13 @@ jobs:
           poetry run pytest --alluredir=allure-results
         continue-on-error: true
 
+      - name: Set up Java
+        if: always()
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
       - name: Install Allure CLI
         if: always()
         run: |
